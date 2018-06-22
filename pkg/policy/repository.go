@@ -33,13 +33,20 @@ type Repository struct {
 	rules []*rule
 
 	// revision is the revision of the policy repository. It will be
-	// incremented whenever the policy repository is changed
+	// incremented whenever the policy repository is changed.
+	// Always > 0.
 	revision uint64
 }
 
 // NewPolicyRepository allocates a new policy repository
 func NewPolicyRepository() *Repository {
-	return &Repository{}
+	return &Repository{
+		// Start the revision from a value > 0, in order to be able to
+		// differentiate a valid policy revision from the special value 0 which
+		// indicates that no policy has been generated for an endpoint, in
+		// Endpoint's policyRevision field.
+		revision: 1,
+	}
 }
 
 // traceState is an internal structure used to collect information
